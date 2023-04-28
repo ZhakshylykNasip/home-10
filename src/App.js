@@ -1,24 +1,113 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useReducer } from "react";
+import { Product } from "./components/product/Product.jsx";
+import { ProductList } from "./components/productList/ProductList.jsx";
+import { productData } from "./components/utils/constants.js";
+
+const initialState = {
+  product:
+   JSON.parse(localStorage.getItem("product")) ||
+    productData,
+};
+
+const onlineReducer = (state, action) => {
+  switch (action.type) {
+    case "addProduct":
+      return {
+        ...state,
+        product: state.product.map((item) => {
+          if (item.id === action.payload) {
+            return {
+              ...item,
+              quantity: item.quantity + 1,
+              price: item.price + item.staticPrice,
+            };
+          }
+          return item;
+        }),
+      };
+
+    case "incrementProduct":
+      return {
+        ...state,
+        product: state.product.map((item) => {
+          if (item.id === action.payload) {
+            return {
+              ...item,
+              quantity: item.quantity + 1,
+              price: item.price + item.staticPrice,
+            };
+          }
+          return item;
+        }),
+      };
+
+    case "decrementProduct":
+      return {
+        ...state,
+        product: state.product.map((item) => {
+          if (item.id === action.payload && item.quantity !== 1) {
+            return {
+              ...item,
+              quantity: item.quantity - 1,
+              price: item.price - item.staticPrice,
+            };
+          }
+          return item;
+        }),
+      };
+
+    case "removeProduct":
+      return {
+        ...state,
+        product: state.product.map((item) => {
+          if (item.id === action.payload && item.quantity !== 0) {
+            return {
+              ...item,
+              quantity: (item.quantity = 0),
+              price: item.staticPrice,
+            };
+          }
+          return item;
+        }),
+      };
+    default:
+      return state;
+  }
+};
 
 function App() {
+  const [store, dispatch] = useReducer(onlineReducer, initialState);
+
+  useEffect(() => {
+    localStorage.setItem("product", JSON.stringify(store.product));
+  }, [store.product]);
+
+  const incrementProductHandler = (id) => {
+    dispatch({ type: "incrementProduct", payload: id });
+  };
+
+  const decrementProductProductHandler = (id) => {
+    dispatch({ type: "decrementProduct", payload: id });
+  };
+
+  const addProductHandler = (id) => {
+    dispatch({ type: "addProduct", payload: id });
+  };
+
+  const removeProductHandler = (id) => {
+    dispatch({ type: "removeProduct", payload: id });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Product store={store.product} addProductHandler={addProductHandler} />
+      <ProductList
+        incrementProductHandler={incrementProductHandler}
+        decrementProductProductHandler={decrementProductProductHandler}
+        store={store.product}
+        removeProductHandler={removeProductHandler}
+      />
+    </>
   );
 }
 
