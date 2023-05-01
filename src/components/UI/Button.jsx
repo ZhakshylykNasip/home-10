@@ -15,7 +15,7 @@ const Buttons = styled.button`
   height:${(p)=>p.height };
   color: #fff;
   border-radius: 10px;
-  border: 3px solid green;
+  border: none;
   font-size: large;
   font-weight: 700;
   &:hover{
@@ -30,6 +30,7 @@ const Buttons = styled.button`
 
   }
   :disabled{
-    background-color: red;
+    background-color: #877e7e;
+    
   }
 `

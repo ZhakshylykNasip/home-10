@@ -1,12 +1,15 @@
-import React from "react";
 import styled from "styled-components";
-import {Button}  from"../UI/Button"
+import { Button } from "../UI/Button";
+import { useContextStore } from "../../store/ContextStore";
 
-export const Product = ({ store, addProductHandler }) => {
+export const Product = () => {
+  const { store, addProduct } = useContextStore();
+  // console.log(store,'store');
+
   return (
     <>
       <Wrapper>
-        {store.map((item) => (
+        {store.product.map((item) => (
           <Container style={{ listStyle: "none" }} key={item.id}>
             <img src={item.url} alt="product photos" />
             <div>
@@ -15,8 +18,10 @@ export const Product = ({ store, addProductHandler }) => {
               </h2>
 
               <Button
-               width="150px" height="40px" bgColor="green"
-                onClick={() => addProductHandler(item.id)}
+                width="150px"
+                height="40px"
+                bgColor="green"
+                onClick={() => addProduct(item.id)}
                 disabled={item.quantity > 0}
               >
                 Add

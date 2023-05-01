@@ -1,14 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 import { Button } from "../UI/Button";
+import { useContextStore } from "../../store/ContextStore";
 
-export const ProductList = ({
-  store,
-  incrementProductHandler,
-  decrementProductProductHandler,
-  removeProductHandler,
-}) => {
-  const totalPrice = store.map((item) => {
+export const ProductList = () => {
+  const {
+    store = [],
+    incProduct,
+    decProduct,
+    removeProduct,
+  } = useContextStore();
+
+  const totalPrice = store?.product.map((item) => {
     if (item.quantity === 0) {
       const result = { ...item, price: (item.price = 0) };
       return result.price;
@@ -32,36 +35,39 @@ export const ProductList = ({
             <p>Remove</p>
           </Thead>
           <ol>
-            {store.map((item) => {
+            {store.product.map((item) => {
               return (
                 item.quantity !== 0 && (
-                  <li style={{fontSize:"50px"}} key={item.id}>
+                  <li style={{ fontSize: "50px" }} key={item.id}>
                     <Tbody>
                       <TImg>
-                        <img src={item.url} alt="photos"/>
+                        <img src={item.url} alt="photos" />
                       </TImg>
                       <div>{item.productName}</div>
                       <div>$ {item.price}</div>
 
                       <ContainerCount>
-                        <Button bgColor="grey" width="30px"
-                          onClick={() =>
-                            decrementProductProductHandler(item.id)
-                          }
+                        <Button
+                          bgColor="grey"
+                          width="30px"
+                          onClick={() => decProduct(item.id)}
                         >
                           -
-                        </Button >
+                        </Button>
                         <span>{item.quantity}</span>
-                        <Button bgColor="grey" width="30px"
-                          onClick={() => incrementProductHandler(item.id)}
+                        <Button
+                          bgColor="grey"
+                          width="30px"
+                          onClick={() => incProduct(item.id)}
                         >
                           +
                         </Button>
                       </ContainerCount>
                       <div>
                         <Button
-                        height="35px" bgColor="red"
-                          onClick={() => removeProductHandler(item.id)}
+                          height="35px"
+                          bgColor="red"
+                          onClick={() => removeProduct(item.id)}
                         >
                           Remove
                         </Button>
@@ -161,9 +167,3 @@ const ContainerCount = styled.div`
   display: flex;
   gap: 10px;
 `;
-
-
-
-
-
-
